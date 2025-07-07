@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <!-- OG Thumbnail dan Info Share -->
+  <meta property="og:title" content="Kusara Chicken - Pesan Ayam Favoritmu Disini!" />
+  <meta property="og:description" content="Pesan ayam marinasi & premium siap masak. Cepat, mudah, dan langsung kirim ke WhatsApp!" />
+  <meta property="og:image" content="https://landitify.github.io/KusaraChicken/kusarachicken.png" />
+  <meta property="og:url" content="https://landitify.github.io/KusaraChicken/" />
+  <meta property="og:type" content="website" />
+
+  <title>Kusara Chicken</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #fff5ec;
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 320px;
+      background-color: rgba(18, 153, 144, 0.08);
+      padding: 20px;
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar h2 {
+      margin-top: 0;
+      color: #333;
+      font-size: 24px;
+      text-align: center;
+      margin-bottom: 15px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    input, select, button {
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+
+    select {
+    background-color: #fff;
+    border: 2px solid #f57c00;
+    border-radius: 8px;
+    font-weight: bold;
+    color: #444;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Cpath fill='%23f57c00' d='M4 6l4 4 4-4z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 16px;
+    padding-right: 36px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+
+  select:focus {
+    border-color: #ef6c00;
+    box-shadow: 0 0 0 3px rgba(245, 124, 0, 0.2);
+    outline: none;
+  }
+
+
+    button {
+      background-color: #f57c00;
+      color: white;
+      font-weight: bold;
+      border: none;
+      transition: background-color 0.3s;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #ef6c00;
+    }
+
+    .remove-btn {
+      background: red;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 10px;
+      cursor: pointer;
+      flex: 1 1 35%;
+      min-width: 80px;
+      margin-left: 10px;
+    }
+
+    #statusMsg {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    .main-content {
+      flex: 1;
+      padding: 30px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      align-content: flex-start;
+      justify-content: center;
+    }
+
+    .judul-menu {
+      width: 100%;
+      text-align: center;
+      font-size: 50px;
+      font-weight: bold;
+      margin-bottom: 20px;
+      margin-top: 0px;
+      color: #333;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .produk {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      padding: 15px;
+      width: 200px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .produk-info {
+      margin-top: auto;
+      text-align: center;
+    }
+
+    .produk img {
+      width: 100%;
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
+
+    .logo {
+      width: 200px;
+      height: auto;
+      margin: 0 auto 20px;
+      display: block;
+    }
+
+    .hargaproduk {
+      background-color: #ef6c00;
+      color: #ffffff;
+      padding: 10px;
+      border-radius: 7px;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .produk-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .produk-btn {
+      background-color: #57a300;
+      color: white;
+      font-weight: bold;
+      border: none;
+      border-radius: 6px;
+      padding: 10px 20px;
+      flex: 1 1 45%;
+      min-width: 100px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .produk-btn:hover {
+      background-color: #60ef00;
+    }
+
+    .toggle-sidebar {
+      position: fixed;
+      top: 15px;
+      left: 15px;
+      z-index: 999;
+      background-color: #f57b00c5;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: none;
+      font-weight: bold;
+    }
+
+    .close-sidebar {
+      display: none;
+      background: red;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 6px;
+      margin-bottom: 10px;
+      cursor: pointer;
+    }
+
+    .badge {
+      position: absolute;
+      top: -6px;
+      right: -6px;
+      background: red;
+      color: white;
+      font-size: 12px;
+      font-weight: bold;
+      padding: 2px 6px;
+      border-radius: 50%;
+      display: none;
+    }
+
+    /* Tampilan mobile */
+    @media(max-width: 768px) {
+      body {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        width: 280px;
+        height: 100vh;
+        position: fixed;
+        left: -100%;
+        top: 0;
+        z-index: 998;
+        transition: left 0.3s ease-in-out;
+        background-color: #fff5ec
+      }
+
+      .sidebar.active {
+        left: 0;
+      }
+
+      .toggle-sidebar {
+        display: block;
+      }
+
+      .close-sidebar {
+        display: block;
+      }
+
+      .produk {
+        width: calc(50% - 20px);
+      }
+      .produk-btn {
+        width: 100%;
+        padding: 10px;
+        font-size: 12px;
+      }
+      .remove-btn {
+        width: 100%;
+        height: auto;
+        padding: 10px;
+        font-size: 12px;
+        min-width: fit-content;
+      }
+
+      .judul-menu {
+        font-size: 36px;
+        margin-bottom: 10px;
+      }
+      select {
+        font-size: 14px;
+        padding: 12px;
+      }
+
+    }
+
+    .menu-row {
+      display: flex;
+      flex-direction: column;
+      background-color: #fff;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .menu-row .row-top {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .menu-row .row-top select,
+    .menu-row .row-top input {
+      flex: 1 1 45%;
+      min-width: 130px;
+    }
+
+    .menu-row .row-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .menu-row .row-bottom input {
+      flex: 1 1 60%;
+      min-width: 120px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+  </style>
+</head>
+<body>
+<!-- Tombol toggle hanya untuk mobile -->
+<button id="toggleSidebar" class="toggle-sidebar">
+  🛒 Order
+  <span id="itemCount" class="badge">0</span>
+</button>
+
+<!-- Sidebar -->
+<div class="sidebar">
+  <img src="kusarachicken.png" alt="Kusara Chicken Logo" class="logo">
+  <h2>Daftar Pesanan Anda🍗</h2>
+
+  <!-- Tombol tutup sidebar di mobile -->
+    <form id="orderForm">
+      <input type="text" id="nama" placeholder="Nama Lengkap" required />
+      <input type="tel" id="wa" placeholder="Nomor WhatsApp (cth: 09123456789)" required />
+      <div id="menuContainer"></div>
+      <button type="button" id="addMenu">+ Tambah Menu</button>
+      
+      <select id="pembayaran" required>
+        <option value="">-- Pilih Metode Pembayaran --</option>
+        <option value="COD">Bayar di Tempat (COD)</option>
+        <option value="Transfer">Transfer Bank</option>
+      </select>
+
+      <button type="submit" style="background-color:#57a300;">Buat Pesanan</button>
+    </form>
+    <p id="statusMsg"></p>
+    <div id="pesananResume" style="margin-top: 20px; padding: 10px; background: #fff; border-radius: 8px; display: none;">
+    <h3>🧾 Ringkasan Pesanan</h3>
+    <button id="kirimWaBtn" style="margin-top: 10px; background-color: #25D366; color: white; border: none; padding: 10px; border-radius: 6px; cursor: pointer;">
+      📲 Kirim ke WhatsApp
+    </button>
+    <div id="isiResume"></div>
+  </div>
+  </div>
+
+  <div class="main-content">
+    <img src="kusarachicken.png" alt="Kusara Chicken Logo" class="logo">
+    <h2 class="judul-menu">Daftar Menu🍗</h2>
+    <div id="produkList"></div>
+    <!-- Contoh produk -->
+    <div class="produk">
+      <img src="WING DRUMMET.jpg" alt="Wing Drummete (marinasi)">
+      <div class="produk-info">
+      <h4>Wing Drummete (marinasi)</h4>
+      <p class="hargaproduk">Rp 30.000</p>
+      <div class="produk-actions">
+      <button class="produk-btn" data-nama="Wing Drummete (marinasi)">+ Keranjang</button>
+      </div>
+      </div>
+    </div>
+    <div class="produk">
+      <img src="PARTING PREMIUM.jpg" alt="Parting Premium (marinasi)">
+      <div class="produk-info">
+      <h4>Parting Premium (marinasi)</h4>
+      <p class="hargaproduk">Rp 29.000</p>
+      <div class="produk-actions">
+      <button class="produk-btn" data-nama="Parting Premium (marinasi)">+ Keranjang</button>
+      </div>
+      </div>
+    </div>
+    <div class="produk">
+      <img src="PAHA ATAS.jpg" alt="Paha Atas">
+      <div class="produk-info">
+      <h4>Paha Atas</h4>
+      <p class="hargaproduk">Rp 43.000</p>
+      <div class="produk-actions">
+      <button class="produk-btn" data-nama="Paha Atas">+ Keranjang</button>
+      </div>
+      </div>
+    </div>
+    <div class="produk">
+      <img src="PAHA BAWAH.jpg" alt="Paha Bawah">
+      <div class="produk-info">
+      <h4>Paha Bawah</h4>
+      <p class="hargaproduk">Rp 43.000</p>
+      <div class="produk-actions">
+      <button class="produk-btn" data-nama="Paha Bawah">+ Keranjang</button>
+      </div>
+      </div>
+    </div>
+    <div class="produk">
+      <img src="PAHA UTUH.jpg" alt="Paha Utuh">
+      <div class="produk-info">
+      <h4>Paha Utuh</h4>
+      <p class="hargaproduk">Rp 43.000</p>
+      <div class="produk-actions">
+      <button class="produk-btn" data-nama="Paha Utuh">+ Keranjang</button>
+      </div>
+      </div>
+    </div>
+    <div class="produk">  
+      <img src="TANPA TULANG KULIT.jpg" alt="Paha (Tanpa Tulang & Tanpa Kulit)">
+      <div class="produk-info">
+      <h4>Paha (Tanpa Tulang & Tanpa Kulit)</h4>
+      <p class="hargaproduk">Rp 51.000</p>
+      <div class="produk-actions">
+      <button class="produk-btn" data-nama="Paha (Tanpa Tulang & Tanpa Kulit)">+ Keranjang</button>
+      </div>
+      </div>
+    </div>
+    <div class="produk">  
+      <img src="DAGING KULIT TANPA TULANG.jpg" alt="Paha + Kulit (Tanpa Tulang)">
+      <div class="produk-info">
+      <h4>Paha + Kulit (Tanpa Tulang)</h4>
+      <p class="hargaproduk">Rp 50.000</p>
+      <div class="produk-actions">
+      <button class="produk-btn" data-nama="Paha + Kulit (Tanpa Tulang)">+ Keranjang</button>
+      </div>
+      </div>
+    </div>
+    <div class="produk">    
+      <img src="TANPA TULANG KULIT.jpg" alt="Dada (Tanpa Tulang & Tanpa Kulit)">
+      <div class="produk-info">
+      <h4>Dada (Tanpa Tulang & Tanpa Kulit)</h4>
+      <p class="hargaproduk">Rp 49.000</p>
+      <div class="produk-actions">
+      <button class="produk-btn" data-nama="Dada (Tanpa Tulang & Tanpa Kulit)">+ Keranjang</button>
+      </div>
+      </div>
+    </div>
+    <div class="produk">  
+      <img src="DAGING KULIT TANPA TULANG.jpg" alt="Dada + Kulit (Tanpa Tulang)">
+      <div class="produk-info">
+      <h4>Dada + Kulit (Tanpa Tulang)</h4>
+      <p class="hargaproduk">Rp 48.000</p>
+      <div class="produk-actions">
+      <button class="produk-btn" data-nama="Dada + Kulit (Tanpa Tulang)">+ Keranjang</button>
+      </div>
+      </div>
+    </div>
+    <div class="produk">  
+      <img src="TANPA TULANG KULIT.jpg" alt="Fillet (campuran)">
+      <div class="produk-info">
+      <h4>Fillet (campuran)</h4>
+      <p class="hargaproduk">Rp 47.000</p>
+      <div class="produk-actions">
+      <button class="produk-btn" data-nama="Fillet (campuran)">+ Keranjang</button>
+      </div>
+      </div>
+    </div>
+    <div class="produk">  
+      <img src="SAYAP UTUH.jpg" alt="Sayap Utuh">
+      <div class="produk-info">
+      <h4>Sayap Utuh</h4>
+      <p class="hargaproduk">Rp 35.000</p>
+      <div class="produk-actions">
+      <button class="produk-btn" data-nama="Sayap Utuh">+ Keranjang</button>
+      </div>
+      </div>
+    </div>
+    <div class="produk">  
+      <img src="WINGSTCIK.jpg" alt="Wingstick">
+      <div class="produk-info">
+      <h4>Wingstick</h4>
+      <p class="hargaproduk">Rp 37.000</p>
+      <div class="produk-actions">
+      <button class="produk-btn" data-nama="Wingstick">+ Keranjang</button>
+      </div>
+      </div>
+    </div>
+    <div class="produk">  
+      <img src="MIDLEWING.jpg" alt="Middle Wing">
+      <div class="produk-info">
+      <h4>Middle Wing</h4>
+      <p class="hargaproduk">Rp 37.000</p>
+      <div class="produk-actions">
+      <button class="produk-btn" data-nama="Middle Wing">+ Keranjang</button>
+      </div>
+      </div>
+    </div>
+    <div class="produk">  
+      <img src="TRIMMING.jpg" alt="Trimming Paha (potongan mie ayam)">
+      <div class="produk-info">
+      <h4>Trimming Paha (potongan mie ayam)</h4>
+      <p class="hargaproduk">Rp 47.000</p>
+      <div class="produk-actions">
+      <button class="produk-btn" data-nama="Trimming Paha (potongan mie ayam)">+ Keranjang</button>
+      </div>
+      </div>
+    </div>
+    <div class="produk">  
+      <img src="TRIMMING.jpg" alt="Trimming Dada (ptongan mie ayam)">
+      <div class="produk-info">
+      <h4>Trimming Dada (ptongan mie ayam)</h4>
+      <p class="hargaproduk">Rp 47.000</p>
+      <div class="produk-actions">
+      <button class="produk-btn" data-nama="Trimming Dada (ptongan mie ayam)">+ Keranjang</button>
+      </div>
+      </div>
+    </div>
+    <div class="produk">  
+      <img src="KULIT.jpg" alt="Kulit">
+      <div class="produk-info">
+      <h4>Kulit</h4>
+      <p class="hargaproduk">Rp 36.000</p>
+      <div class="produk-actions">
+      <button class="produk-btn" data-nama="Kulit">+ Keranjang</button>
+
+      <!-- Modal Input Jumlah -->
+      <div id="qtyModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9999; justify-content:center; align-items:center;">
+        <div style="background:white; padding:20px; border-radius:10px; width:90%; max-width:400px; box-shadow:0 4px 10px rgba(0,0,0,0.3); text-align:center;">
+          <h3 id="modalTitle" style="margin-bottom:15px;"></h3>
+          <input type="number" id="modalQty" placeholder="Masukkan jumlah" min="1" style="padding:10px; width:100%; font-size:16px; border-radius:6px; border:1px solid #ccc; margin-bottom:15px;">
+          <div style="display:flex; justify-content:space-between;">
+            <button id="cancelModal" style="background:#ccc; border:none; padding:10px 20px; border-radius:6px;">Batal</button>
+            <button id="confirmQty" style="background:#f57c00; color:white; border:none; padding:10px 20px; border-radius:6px;">Tambahkan</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Toast -->
+      <div id="toast" style="position:fixed; bottom:30px; right:30px; background:#4caf50; color:white; padding:12px 20px; border-radius:8px; box-shadow:0 4px 10px rgba(0,0,0,0.2); display:none; z-index:9999; font-weight:bold;"></div>
+      </div>
+      <div id="loadingSpinner" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.7); z-index:99999; justify-content:center; align-items:center;">
+        <div style="border: 6px solid #f3f3f3; border-top: 6px solid #f57c00; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite;"></div>
+      </div>
+
+      </div>
+    </div>
+    <script>
+  // Toggle sidebar untuk mobile
+  const sidebar = document.querySelector(".sidebar");
+  const toggleSidebarBtn = document.getElementById("toggleSidebar");
+  const closeSidebarBtn = document.getElementById("closeSidebar");
+
+  toggleSidebarBtn.addEventListener("click", (e) => {
+  e.stopPropagation(); // ❗️ini penting banget, biar gak ikut trigger event klik luar
+  sidebar.classList.toggle("active");
+});
+
+
+  // Tutup sidebar jika klik di luar sidebar (khusus mobile)
+document.addEventListener("click", function(event) {
+  const sidebar = document.querySelector(".sidebar");
+  const toggleBtn = document.getElementById("toggleSidebar");
+
+  const isClickInsideSidebar = sidebar.contains(event.target);
+  const isClickOnToggle = toggleBtn.contains(event.target);
+
+  if (!isClickInsideSidebar && !isClickOnToggle && sidebar.classList.contains("active")) {
+    sidebar.classList.remove("active");
+  }
+});
+
+function updateItemCount() {
+  const rows = document.querySelectorAll(".menu-row");
+  let totalQty = 0;
+  rows.forEach(row => {
+    const qty = parseInt(row.querySelector("input[type='number']").value);
+    if (!isNaN(qty)) totalQty += qty;
+  });
+
+  console.log("Total qty:", totalQty); // ✅ Debug log
+
+  const itemCount = document.getElementById("itemCount");
+  if (totalQty > 0) {
+    itemCount.textContent = totalQty;
+    itemCount.style.display = "inline-block";
+  } else {
+    itemCount.style.display = "none";
+  }
+}
+
+
+
+</script>
+    <!-- Tambah lagi produk di sini -->
+  </div>
+
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+    import { get } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBlU6t8P_DUz7sGoc6DcZ8CTTQdQBhPwNc",
+      authDomain: "pesanan-ayam-kusara-chicken-2.firebaseapp.com",
+      databaseURL: "https://pesanan-ayam-kusara-chicken-2-default-rtdb.firebaseio.com",
+      projectId: "pesanan-ayam-kusara-chicken-2",
+      storageBucket: "pesanan-ayam-kusara-chicken-2.firebasestorage.app",
+      messagingSenderId: "406108357153",
+      appId: "1:406108357153:web:ba4a77fa8b300898225960",
+      measurementId: "G-6RY10W0N72"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const hargaRef = ref(db, 'HargaProduk'); // sesuai dengan admin.html
+
+    get(hargaRef).then(snapshot => {
+      if (snapshot.exists()) {
+        const data = snapshot.val();
+
+        // Isi hargaMenu dengan data dari Firebase
+        for (const key in data) {
+          hargaMenu[key] = data[key];
+        }
+
+        // Update tampilan harga di kartu produk
+        document.querySelectorAll('.produk').forEach(produk => {
+          const nama = produk.querySelector('button')?.dataset?.nama;
+          const hargaEl = produk.querySelector('.hargaproduk');
+          if (nama && hargaMenu[nama]) {
+            hargaEl.textContent = `Rp ${Number(hargaMenu[nama]).toLocaleString('id-ID')}`;
+          }
+        });
+
+      } else {
+        console.warn("Harga tidak ditemukan di Firebase");
+      }
+    }).catch(error => {
+      console.error("Gagal mengambil harga:", error);
+    });
+
+
+    const hargaMenu = {}
+
+    const form = document.getElementById("orderForm");
+    const menuContainer = document.getElementById("menuContainer");
+    const addMenuBtn = document.getElementById("addMenu");
+    const statusMsg = document.getElementById("statusMsg");
+
+    function createMenuRow() {
+    const row = document.createElement("div");
+    row.className = "menu-row";
+
+    const rowTop = document.createElement("div");
+    rowTop.className = "row-top";
+
+    const select = document.createElement("select");
+    select.required = true;
+    select.innerHTML = `<option value="">-- Pilih Pesanan --</option>` +
+      Object.keys(hargaMenu).map(menu => `<option value="${menu}">${menu}</option>`).join('');
+
+    const qty = document.createElement("input");
+    qty.type = "number";
+    qty.placeholder = "Jumlah";
+    qty.min = 1;
+    qty.required = true;
+
+    rowTop.append(select, qty);
+
+    const rowBottom = document.createElement("div");
+    rowBottom.className = "row-bottom";
+
+    const total = document.createElement("input");
+    total.type = "text";
+    total.placeholder = "Total Harga";
+    total.readOnly = true;
+
+    const removeBtn = document.createElement("button");
+    removeBtn.type = "button";
+    removeBtn.textContent = "Hapus";
+    removeBtn.className = "remove-btn";
+    removeBtn.onclick = () => {
+    row.remove();
+    updateItemCount(); // ✅ TAMBAH INI
+  };
+
+    rowBottom.append(total, removeBtn);
+
+    function updateTotal() {
+      const val = select.value;
+      const jumlah = parseInt(qty.value);
+      total.value = (val && jumlah && hargaMenu[val]) ? `Rp ${hargaMenu[val] * jumlah}` : '';
+    }
+
+    select.addEventListener("change", updateTotal);
+    qty.addEventListener("input", () => {
+    updateTotal();
+    updateItemCount(); // ✅ TAMBAH INI
+    });
+    row.append(rowTop, rowBottom);
+    return row;
+  }
+
+  addMenuBtn.addEventListener("click", () => {
+    const row = createMenuRow();
+    menuContainer.appendChild(row);
+  });
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    document.getElementById("loadingSpinner").style.display = "flex";
+    const nama = document.getElementById("nama").value.trim();
+    const wa = document.getElementById("wa").value.trim();
+    const pembayaran = document.getElementById("pembayaran").value;
+    const pesanan = [];
+    let isValid = true;
+
+    menuContainer.querySelectorAll(".menu-row").forEach(row => {
+      const menu = row.querySelector("select").value;
+      const qty = parseInt(row.querySelector("input[type='number']").value);
+      if (!menu || !qty) isValid = false;
+      else pesanan.push({ menu, qty, total: hargaMenu[menu] * qty });
+    });
+
+      if (!nama || !wa || !pembayaran || !isValid || pesanan.length === 0) {
+        document.getElementById("loadingSpinner").style.display = "none"; // 🛑 HENTIKAN LOADING
+        statusMsg.textContent = "❌ Harap isi semua field!";
+        statusMsg.style.color = "red";
+        return;
+      }
+
+
+    try {
+      const newOrderRef = push(ref(db, 'pesanan'));
+      await set(newOrderRef, {
+        nama,
+        wa,
+        pembayaran,
+        pesanan,
+        waktu: new Date().toISOString()
+      });
+
+      document.getElementById("loadingSpinner").style.display = "none"; // SEMBUNYIKAN spinner
+      
+      statusMsg.textContent = "✅ Pesanan berhasil dikirim!";
+      statusMsg.style.color = "green";
+      form.reset();
+      menuContainer.innerHTML = "";
+
+      let totalHarga = pesanan.reduce((sum, item) => sum + item.total, 0);
+        let html = `<p><strong>Nama:</strong> ${nama}</p>
+        <p><strong>WA:</strong> ${wa}</p>
+        <p><strong>Pembayaran:</strong> ${pembayaran}</p>
+        <ul>`;
+
+      pesanan.forEach(item => {
+        html += `<li>${item.menu} (${item.qty}x) - Rp ${Number(item.total).toLocaleString('id-ID')}</li>`;
+      });
+      html += `</ul><p><strong>Total:</strong> Rp ${Number(totalHarga).toLocaleString('id-ID')}</p>`;
+
+      // if (pembayaran === "Transfer") {
+      //   html += `<p><strong>Silakan transfer ke rekening:</strong><br>
+      //   BNI 1181956153 a.n. Muhamad Ahya Kusara</p>`;
+      // }
+
+      html += `</div>`;
+
+      document.getElementById("isiResume").innerHTML = html;
+      document.getElementById("pesananResume").style.display = "block";
+
+      const waBtn = document.getElementById("kirimWaBtn");
+      waBtn.onclick = () => {
+        let pesan = `*Pesanan Kusara Chicken*\n\nNama: ${nama}\nNo. WA: ${wa}\nPembayaran: ${pembayaran}\n\n`;
+        pesan += `*Daftar Pesanan:*\n`;
+        pesanan.forEach(item => {
+          pesan += `• ${item.menu} (${item.qty}x) - Rp ${Number(item.total).toLocaleString('id-ID')}\n`;
+          });
+          pesan += `\nTotal: Rp ${Number(totalHarga).toLocaleString('id-ID')}`;
+
+        //   if (pembayaran === "Transfer") {
+        //   pesan += `\n\nSilakan transfer ke rekening:\nBNI 1181956153 a.n. Muhamad Ahya Kusara\n*Jangan lupa kirim bukti transfer ke WA ya 🙏*`;
+        //   } else
+
+        // pesan += `\n\nTerima kasih 🙏`;
+        const encoded = encodeURIComponent(pesan);
+        window.open(`https://wa.me/+6281289934763?text=${encoded}`, "_blank");
+      };
+
+    } catch (error) {
+      document.getElementById("loadingSpinner").style.display = "none"; // SEMBUNYIKAN spinner
+      statusMsg.textContent = "❌ Gagal mengirim pesanan: " + error.message;
+      statusMsg.style.color = "red";
+    }
+  });
+
+  document.querySelectorAll('.produk-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+  const namaMenu = btn.dataset.nama;
+
+  const modal = document.getElementById("qtyModal");
+  const modalTitle = document.getElementById("modalTitle");
+  const modalQty = document.getElementById("modalQty");
+  const confirmBtn = document.getElementById("confirmQty");
+  const cancelBtn = document.getElementById("cancelModal");
+
+  modal.style.display = "flex";
+  modalTitle.textContent = `Masukkan jumlah untuk "${namaMenu}"`;
+  modalQty.value = "";
+
+  confirmBtn.onclick = () => {
+    const jumlah = parseInt(modalQty.value);
+    if (!jumlah || jumlah < 1) {
+      showToast("Jumlah tidak valid!", true);
+      return;
+    }
+
+    const row = createMenuRow();
+    const select = row.querySelector("select");
+    const qtyField = row.querySelector("input[type='number']");
+    const totalField = row.querySelector("input[readonly]");
+
+    select.value = namaMenu;
+    qtyField.value = jumlah;
+    totalField.value = `Rp ${hargaMenu[namaMenu] * jumlah}`;
+
+    menuContainer.appendChild(row);
+    updateItemCount(); // ✅ TAMBAH INI
+    modal.style.display = "none";
+    showToast("✅ Pesanan berhasil dimasukkan!");
+  };
+
+  cancelBtn.onclick = () => {
+    modal.style.display = "none";
+  };
+  function showToast(message, isError = false) {
+  const toast = document.getElementById("toast");
+  toast.textContent = message;
+  toast.style.background = isError ? "#e53935" : "#4caf50";
+  toast.style.display = "block";
+  setTimeout(() => {
+    toast.style.display = "none";
+  }, 3000);
+}
+  });
+});
+</script>
+</body>
+</html>
